@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import java.util.ArrayList;
 
-public class MyHighScoreManager {
+public class HighScoreServer {
     /**
      * url of where you get your high score data. What you get depends on the
      * server. In this democase you will receive a json file that will contain
@@ -48,7 +48,7 @@ public class MyHighScoreManager {
             @Override
             public void failed (Throwable t) {
                 if (verbose)
-                    Gdx.app.error("MyHighScoreManager",
+                    Gdx.app.error("HighScoreServer",
                             "GET: something went wrong");
                 source.failedToRetrieveHighScores(t);
             }
@@ -56,7 +56,7 @@ public class MyHighScoreManager {
             @Override
             public void cancelled () {
                 if (verbose)
-                    Gdx.app.log("MyHighScoreManager", "GET: cancelled");
+                    Gdx.app.log("HighScoreServer", "GET: cancelled");
             }
 
         });
@@ -78,14 +78,14 @@ public class MyHighScoreManager {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 if (verbose)
-                    Gdx.app.log("MyHighScoreManager", "POST: success");
+                    Gdx.app.log("HighScoreServer", "POST: success");
                 source.receiveConfirmationOnSend();
             }
 
             @Override
             public void failed(Throwable t) {
                 if (verbose)
-                    Gdx.app.error("MyHighScoreManager",
+                    Gdx.app.error("HighScoreServer",
                             "POST: something went wrong", t);
                 source.failedToSendHighScore(t);
             }
@@ -93,7 +93,7 @@ public class MyHighScoreManager {
             @Override
             public void cancelled() {
                 if (verbose)
-                    Gdx.app.log("MyHighScoreManager", "POST: cancelled");
+                    Gdx.app.log("HighScoreServer", "POST: cancelled");
             }
         });
     }

@@ -26,8 +26,8 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 		createFont();
-		MyHighScoreManager.fetchHighScores(this);
-		MyHighScoreManager.sendNewHighScore(new HighScoreEntry("Pekka", 100000), this);
+		HighScoreServer.fetchHighScores(this);
+		HighScoreServer.sendNewHighScore(new HighScoreEntry("Pekka", 100000), this);
 	}
 
 	private void createFont() {
@@ -81,7 +81,7 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 
 	@Override
 	public void receiveConfirmationOnSend() {
-		MyHighScoreManager.fetchHighScores(this);
+		HighScoreServer.fetchHighScores(this);
 	}
 
 	@Override
