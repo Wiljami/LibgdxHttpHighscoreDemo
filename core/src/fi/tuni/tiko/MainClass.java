@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import java.util.List;
 
 
-public class MainClass extends ApplicationAdapter implements HighscoreListener {
+public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
@@ -24,7 +24,7 @@ public class MainClass extends ApplicationAdapter implements HighscoreListener {
 	@Override
 	public void create () {
 		myHighScoreManager = new MyHighScoreManager();
-		//highScore.sendNewHighScore(new HighscoreEntry("libgdx", 9999999));
+		//highScore.sendNewHighScore(new HighScoreEntry("libgdx", 9999999));
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
@@ -68,13 +68,13 @@ public class MainClass extends ApplicationAdapter implements HighscoreListener {
 	}
 
 	@Override
-	public void receiveHighscore(List<HighscoreEntry> highscores) {
+	public void receiveHighscore(List<HighScoreEntry> highScores) {
 		StringBuilder string = new StringBuilder();
 		string.append("Highscores:\n");
-		if (highscores == null) {
+		if (highScores == null) {
 			textToDraw = string.toString();
 		} else {
-			for (HighscoreEntry e : highscores) {
+			for (HighScoreEntry e : highScores) {
 				string.append(e.getScore()).append("  ").append(e.getName()).append("\n");
 			}
 			textToDraw = string.toString();
