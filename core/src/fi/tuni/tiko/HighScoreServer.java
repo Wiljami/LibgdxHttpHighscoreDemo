@@ -8,6 +8,12 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import java.util.ArrayList;
 
+/**
+ * To get this work on an android device add following line to
+ * AndroidManifest.xml:
+ * <uses-permission android:name="android.permission.INTERNET" />
+ * above tag <application
+ */
 public class HighScoreServer {
     /**
      * url of where you get your high score data. What you get depends on the
