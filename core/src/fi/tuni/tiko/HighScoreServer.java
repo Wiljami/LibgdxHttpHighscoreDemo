@@ -30,7 +30,13 @@ public class HighScoreServer {
      */
     private static boolean verbose = true;
 
-
+    /**
+     * fetchHighScores gets high score entries from the server.
+     *
+     * This gets high score entries from a server, converts the json file to
+     * List of HighScoreEntries and sends it back to the source.
+     * @param source source class implementing HighScoreListener
+     */
     public static void fetchHighScores(final HighScoreListener source) {
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.GET);
         request.setUrl(GETURL);
@@ -62,6 +68,13 @@ public class HighScoreServer {
         });
     }
 
+    /**
+     * sendHighScore entry sends new high score data to the server
+     *
+     * It will then send a confirmation of success back to the source.
+     * @param highScore The new HighScoreEntry data to be sent to the server.
+     * @param source source class implementing HighScoreListener
+     */
     public static void sendNewHighScore(HighScoreEntry highScore,
                                         final HighScoreListener source) {
         Json json = new Json();
