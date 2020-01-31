@@ -23,6 +23,8 @@ public class MyHighScoreManager {
      */
     private static final String POSTURL = "https://highscore-demo.herokuapp.com/add/";
 
+    private static boolean verbose = true;
+
 
     public static void fetchHighScores(final HighScoreListener source) {
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.GET);
@@ -33,29 +35,34 @@ public class MyHighScoreManager {
             public void handleHttpResponse (Net.HttpResponse httpResponse) {
                 String result = httpResponse.getResultAsString();
                 Json json = new Json();
-                ArrayList<HighScoreEntry> highScores = json.fromJson(ArrayList.class, HighScoreEntry.class, result);
+                ArrayList<HighScoreEntry> highScores = json.fromJson(ArrayList.class,
+                        HighScoreEntry.class, result);
                 source.receiveHighScore(highScores);
             }
 
             @Override
             public void failed (Throwable t) {
-                Gdx.app.error("MyHighScoreManager", "GET: something went wrong");
+                if (verbose)
+                    Gdx.app.error("MyHighScoreManager",
+                            "GET: something went wrong");
                 source.failedToRetrieveHighScores(t);
             }
 
             @Override
             public void cancelled () {
-                Gdx.app.log("MyHighScoreManager", "GET: cancelled");
+                if (verbose)
+                    Gdx.app.log("MyHighScoreManager", "GET: cancelled");
             }
 
         });
     }
 
-    public static void sendNewHighScore(HighScoreEntry highscore, final HighScoreListener source) {
+    public static void sendNewHighScore(HighScoreEntry highScore,
+                                        final HighScoreListener source) {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
 
-        String content = json.toJson(highscore);
+        String content = json.toJson(highScore);
 
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.POST);
         request.setUrl(POSTURL);
@@ -65,19 +72,23 @@ public class MyHighScoreManager {
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                Gdx.app.log("MyHighScoreManager", "POST: success");
+                if (verbose)
+                    Gdx.app.log("MyHighScoreManager", "POST: success");
                 source.receiveConfirmationOnSend();
             }
 
             @Override
             public void failed(Throwable t) {
-                Gdx.app.error("MyHighScoreManager", "POST: something went wrong", t);
+                if (verbose)
+                    Gdx.app.error("MyHighScoreManager",
+                            "POST: something went wrong", t);
                 source.failedToSendHighScore(t);
             }
 
             @Override
             public void cancelled() {
-                Gdx.app.log("MyHighScoreManager", "POST: cancelled");
+                if (verbose)
+                    Gdx.app.log("MyHighScoreManager", "POST: cancelled");
             }
         });
     }
