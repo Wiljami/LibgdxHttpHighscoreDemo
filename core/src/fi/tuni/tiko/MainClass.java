@@ -27,6 +27,8 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 		createFont();
+		HighScoreServer.setGetUrl("https://highscore-demo.herokuapp.com/get/");
+		HighScoreServer.setPostUrl("https://highscore-demo.herokuapp.com/add");
 		HighScoreServer.fetchHighScores(this);
 	}
 

@@ -20,16 +20,14 @@ public class HighScoreServer {
      * server. In this democase you will receive a json file that will contain
      * up to 10 high score entries ordered by highest score first.
      */
-    private static final String GETURL =
-            "https://highscore-demo.herokuapp.com/get/";
+    private static String getUrl;
 
     /**
      * url where you send your high score entries. The server will then handle
      * the entry data. You should not have to worry whether the new high score
      * gets to the top10 etc. Server takes care of that.
      */
-    private static final String POSTURL =
-            "https://highscore-demo.herokuapp.com/add/";
+    private static String postUrl;
 
     /**
      * If verbose is true, this class will print out messages to the Gdx log.
@@ -45,7 +43,7 @@ public class HighScoreServer {
      */
     public static void fetchHighScores(final HighScoreListener source) {
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.GET);
-        request.setUrl(GETURL);
+        request.setUrl(getUrl);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @SuppressWarnings("unchecked")
             @Override
@@ -90,7 +88,7 @@ public class HighScoreServer {
         String content = json.toJson(highScore);
 
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.POST);
-        request.setUrl(POSTURL);
+        request.setUrl(postUrl);
         request.setHeader("Content-type", "application/json");
         request.setContent(content);
 
@@ -116,5 +114,13 @@ public class HighScoreServer {
                     Gdx.app.log("HighScoreServer", "Send: cancelled");
             }
         });
+    }
+
+    public static void setGetUrl(String getUrl) {
+        HighScoreServer.getUrl = getUrl;
+    }
+
+    public static void setPostUrl(String postUrl) {
+        HighScoreServer.postUrl = postUrl;
     }
 }
