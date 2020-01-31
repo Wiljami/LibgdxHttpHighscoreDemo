@@ -23,13 +23,11 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 
 	@Override
 	public void create () {
-		//highScore.sendNewHighScore(new HighScoreEntry("libgdx", 9999999));
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 		createFont();
 		HighScoreServer.fetchHighScores(this);
-		HighScoreServer.sendNewHighScore(new HighScoreEntry("Pekka", 100000), this);
 	}
 
 	private void createFont() {
@@ -40,6 +38,11 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		parameter.size = 24;
 		parameter.color = Color.BLACK;
 		font = fontGenerator.generateFont(parameter);
+	}
+
+	private void sendScore() {
+		HighScoreEntry score = new HighScoreEntry("Kalle", 10000);
+		HighScoreServer.sendNewHighScore(score, this);
 	}
 
 
