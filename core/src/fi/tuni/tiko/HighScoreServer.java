@@ -48,6 +48,7 @@ public class HighScoreServer {
                 Json json = new Json();
                 ArrayList<HighScoreEntry> highScores =
                         json.fromJson(ArrayList.class, HighScoreEntry.class, r);
+                Gdx.app.log("HighScoreServer", "Fetch: success");
                 source.receiveHighScore(highScores);
             }
 
@@ -55,14 +56,14 @@ public class HighScoreServer {
             public void failed (Throwable t) {
                 if (verbose)
                     Gdx.app.error("HighScoreServer",
-                            "GET: something went wrong");
+                            "Fetch: failed");
                 source.failedToRetrieveHighScores(t);
             }
 
             @Override
             public void cancelled () {
                 if (verbose)
-                    Gdx.app.log("HighScoreServer", "GET: cancelled");
+                    Gdx.app.log("HighScoreServer", "Fetch: cancelled");
             }
 
         });
@@ -91,7 +92,7 @@ public class HighScoreServer {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 if (verbose)
-                    Gdx.app.log("HighScoreServer", "POST: success");
+                    Gdx.app.log("HighScoreServer", "Send: success");
                 source.receiveConfirmationOnSend();
             }
 
@@ -99,14 +100,14 @@ public class HighScoreServer {
             public void failed(Throwable t) {
                 if (verbose)
                     Gdx.app.error("HighScoreServer",
-                            "POST: something went wrong", t);
+                            "Send: failed", t);
                 source.failedToSendHighScore(t);
             }
 
             @Override
             public void cancelled() {
                 if (verbose)
-                    Gdx.app.log("HighScoreServer", "POST: cancelled");
+                    Gdx.app.log("HighScoreServer", "Send: cancelled");
             }
         });
     }
