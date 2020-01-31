@@ -9,12 +9,22 @@ import com.badlogic.gdx.utils.JsonWriter;
 import java.util.ArrayList;
 
 public class MyHighScoreManager {
-    private final String GETURL = "https://highscore-demo.herokuapp.com/get/";
-    private final String POSTURL = "https://highscore-demo.herokuapp.com/add/";
+    /**
+     * url of where you get your high score data. What you get depends on the
+     * server. In this democase you will receive a json file that will contain
+     * up to 10 high score entries ordered by highest score first.
+     */
+    private static final String GETURL = "https://highscore-demo.herokuapp.com/get/";
 
-    private ArrayList<HighScoreEntry> highScores;
+    /**
+     * url where you send your high score entries. The server will then handle
+     * the entry data. You should not have to worry whether the new high score
+     * gets to the top10 etc. Server takes care of that.
+     */
+    private static final String POSTURL = "https://highscore-demo.herokuapp.com/add/";
 
-    public void fetchHighScores(final HighScoreListener source) {
+
+    public static void fetchHighScores(final HighScoreListener source) {
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.GET);
         request.setUrl(GETURL);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
@@ -23,10 +33,9 @@ public class MyHighScoreManager {
             public void handleHttpResponse (Net.HttpResponse httpResponse) {
                 String result = httpResponse.getResultAsString();
                 Json json = new Json();
-                highScores = json.fromJson(ArrayList.class, HighScoreEntry.class, result);
-                source.receiveHighscore(highScores);
+                ArrayList<HighScoreEntry> highScores = json.fromJson(ArrayList.class, HighScoreEntry.class, result);
+                source.receiveHighScore(highScores);
             }
-
 
             @Override
             public void failed (Throwable t) {
@@ -41,7 +50,7 @@ public class MyHighScoreManager {
         });
     }
 
-    public void sendNewHighScore(HighScoreEntry highscore) {
+    public static void sendNewHighScore(HighScoreEntry highscore) {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
 
@@ -69,9 +78,5 @@ public class MyHighScoreManager {
                 Gdx.app.log("MyHighScoreManager", "POST: cancelled");
             }
         });
-    }
-
-    public ArrayList<HighScoreEntry> getHighScores() {
-        return highScores;
     }
 }

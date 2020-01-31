@@ -16,20 +16,17 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
-	private MyHighScoreManager myHighScoreManager;
-
 	private int height = 800;
 	private int width = 600;
 
 	@Override
 	public void create () {
-		myHighScoreManager = new MyHighScoreManager();
 		//highScore.sendNewHighScore(new HighScoreEntry("libgdx", 9999999));
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 		createFont();
-		myHighScoreManager.fetchHighScores(this);
+		MyHighScoreManager.fetchHighScores(this);
 	}
 
 	private void createFont() {
@@ -68,7 +65,7 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	}
 
 	@Override
-	public void receiveHighscore(List<HighScoreEntry> highScores) {
+	public void receiveHighScore(List<HighScoreEntry> highScores) {
 		StringBuilder string = new StringBuilder();
 		string.append("Highscores:\n");
 		if (highScores == null) {
@@ -79,5 +76,10 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 			}
 			textToDraw = string.toString();
 		}
+	}
+
+	@Override
+	public void receiveConfirmationOnSend(boolean success) {
+		MyHighScoreManager.fetchHighScores(this);
 	}
 }
