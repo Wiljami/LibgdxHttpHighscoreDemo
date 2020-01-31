@@ -14,15 +14,20 @@ public class MyHighScoreManager {
      * server. In this democase you will receive a json file that will contain
      * up to 10 high score entries ordered by highest score first.
      */
-    private static final String GETURL = "https://highscore-demo.herokuapp.com/get/";
+    private static final String GETURL =
+            "https://highscore-demo.herokuapp.com/get/";
 
     /**
      * url where you send your high score entries. The server will then handle
      * the entry data. You should not have to worry whether the new high score
      * gets to the top10 etc. Server takes care of that.
      */
-    private static final String POSTURL = "https://highscore-demo.herokuapp.com/add/";
+    private static final String POSTURL =
+            "https://highscore-demo.herokuapp.com/add/";
 
+    /**
+     * If verbose is true, this class will print out messages to the Gdx log.
+     */
     private static boolean verbose = true;
 
 
@@ -33,10 +38,10 @@ public class MyHighScoreManager {
             @SuppressWarnings("unchecked")
             @Override
             public void handleHttpResponse (Net.HttpResponse httpResponse) {
-                String result = httpResponse.getResultAsString();
+                String r = httpResponse.getResultAsString();
                 Json json = new Json();
-                ArrayList<HighScoreEntry> highScores = json.fromJson(ArrayList.class,
-                        HighScoreEntry.class, result);
+                ArrayList<HighScoreEntry> highScores =
+                        json.fromJson(ArrayList.class, HighScoreEntry.class, r);
                 source.receiveHighScore(highScores);
             }
 
