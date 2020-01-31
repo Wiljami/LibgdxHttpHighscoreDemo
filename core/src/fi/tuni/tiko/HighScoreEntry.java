@@ -1,8 +1,10 @@
 package fi.tuni.tiko;
 
 /**
- * HighScoreEntry needs to have variables for all the attributes from the HighScore server.
- * In the demo case, we need variables String name and int score.
+ * HighScoreEntry needs to have variables for all the attributes from the
+ * HighScore server.In the demo case, we need variables String name and
+ * int score.
+ *
  * The variable names need to match the json keys.
  * Also each of the attribute needs to have a getter and setter for json parsing.
  */
