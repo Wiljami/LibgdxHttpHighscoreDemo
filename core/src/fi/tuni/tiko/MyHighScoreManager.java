@@ -39,7 +39,8 @@ public class MyHighScoreManager {
 
             @Override
             public void failed (Throwable t) {
-                Gdx.app.error("MyHighScoreManager", "GET: something went wrong", t);
+                Gdx.app.error("MyHighScoreManager", "GET: something went wrong");
+                source.failedToRetrieveHighScores(t);
             }
 
             @Override
@@ -50,7 +51,7 @@ public class MyHighScoreManager {
         });
     }
 
-    public static void sendNewHighScore(HighScoreEntry highscore) {
+    public static void sendNewHighScore(HighScoreEntry highscore, final HighScoreListener source) {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
 
@@ -65,12 +66,13 @@ public class MyHighScoreManager {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 Gdx.app.log("MyHighScoreManager", "POST: success");
+                source.receiveConfirmationOnSend();
             }
 
             @Override
             public void failed(Throwable t) {
                 Gdx.app.error("MyHighScoreManager", "POST: something went wrong", t);
-
+                source.failedToSendHighScore(t);
             }
 
             @Override

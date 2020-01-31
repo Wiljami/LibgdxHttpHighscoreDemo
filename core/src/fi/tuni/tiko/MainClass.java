@@ -27,6 +27,7 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		camera.setToOrtho(false, width, height);
 		createFont();
 		MyHighScoreManager.fetchHighScores(this);
+		MyHighScoreManager.sendNewHighScore(new HighScoreEntry("Pekka", 100000), this);
 	}
 
 	private void createFont() {
@@ -79,7 +80,19 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	}
 
 	@Override
-	public void receiveConfirmationOnSend(boolean success) {
+	public void receiveConfirmationOnSend() {
 		MyHighScoreManager.fetchHighScores(this);
+	}
+
+	@Override
+	public void failedToRetrieveHighScores(Throwable t) {
+		Gdx.app.error("MainClass",
+				"Something went wrong while getting high scores", t);
+	}
+
+	@Override
+	public void failedToSendHighScore(Throwable t) {
+		Gdx.app.error("MainClass",
+				"Something went wrong while sending a high score entry", t);
 	}
 }

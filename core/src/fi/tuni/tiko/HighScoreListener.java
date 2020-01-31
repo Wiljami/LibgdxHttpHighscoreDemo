@@ -13,5 +13,9 @@ public interface HighScoreListener {
      */
     public void receiveHighScore(List<HighScoreEntry> highScores);
 
-    public void receiveConfirmationOnSend(boolean success);
+    public void failedToRetrieveHighScores(Throwable t);
+
+    public void receiveConfirmationOnSend();
+
+    public void failedToSendHighScore(Throwable t);
 }
