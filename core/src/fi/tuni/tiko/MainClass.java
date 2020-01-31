@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.List;
 
-
+/**
+ * MainClass is just for demo purposes in this project.
+ */
 public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -65,14 +67,13 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		font.dispose();
 	}
 
-	@Override
-	public void receiveHighScore(List<HighScoreEntry> highScores) {
+	private void buildNewString(List<HighScoreEntry> scores) {
 		StringBuilder string = new StringBuilder();
 		string.append("Highscores:\n");
-		if (highScores == null) {
+		if (scores == null) {
 			textToDraw = string.toString();
 		} else {
-			for (HighScoreEntry e : highScores) {
+			for (HighScoreEntry e : scores) {
 				string.append(e.getScore()).append("  ").append(e.getName()).append("\n");
 			}
 			textToDraw = string.toString();
@@ -80,7 +81,14 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	}
 
 	@Override
+	public void receiveHighScore(List<HighScoreEntry> highScores) {
+		Gdx.app.error("MainClass", "Received new high scores successfully");
+		buildNewString(highScores);
+	}
+
+	@Override
 	public void receiveConfirmationOnSend() {
+		Gdx.app.error("MainClass", "Sent a new high entry successfully");
 		HighScoreServer.fetchHighScores(this);
 	}
 
