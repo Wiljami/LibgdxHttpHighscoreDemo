@@ -11,23 +11,23 @@ public interface HighScoreListener {
      * has been downloaded from the server. It is passed using this method.
      * @param highScores the loaded highScoreEntry data in a List
      */
-    public void receiveHighScore(List<HighScoreEntry> highScores);
+    void receiveHighScore(List<HighScoreEntry> highScores);
 
     /**
      * If retrieving the high scores fails for some reason this is called.
      * @param t error message as Throwable
      */
-    public void failedToRetrieveHighScores(Throwable t);
+    void failedToRetrieveHighScores(Throwable t);
 
     /**
      * ReceiveConfirmationOnSend is called when sending high score entry is
      * successful.
      */
-    public void receiveConfirmationOnSend();
+    void receiveConfirmationOnSend();
 
     /**
      * If sending high score entry fails this is called.
      * @param t error message as Throwable
      */
-    public void failedToSendHighScore(Throwable t);
+    void failedToSendHighScore(Throwable t);
 }
