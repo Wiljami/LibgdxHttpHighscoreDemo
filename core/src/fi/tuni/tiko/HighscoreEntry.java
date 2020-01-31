@@ -1,14 +1,14 @@
 package fi.tuni.tiko;
 
-public class HighScoreEntry {
+public class HighscoreEntry {
     private String name;
     private int score;
 
     // We need this no argument constructor for the json parsing!
-    public HighScoreEntry() {
+    public HighscoreEntry() {
     }
 
-    public HighScoreEntry(String name, int score) {
+    public HighscoreEntry(String name, int score) {
         this.name = name;
         this.score = score;
     }

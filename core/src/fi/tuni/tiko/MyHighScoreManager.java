@@ -12,19 +12,19 @@ public class MyHighScoreManager {
     private final String GETURL = "https://highscore-demo.herokuapp.com/get/";
     private final String POSTURL = "https://highscore-demo.herokuapp.com/add/";
 
-    private String result = "";
-    private ArrayList<HighScoreEntry> highScores;
+    private ArrayList<HighscoreEntry> highScores;
 
-    public void fetchHighScores() {
+    public void fetchHighScores(final HighscoreListener source) {
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.GET);
         request.setUrl(GETURL);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @SuppressWarnings("unchecked")
             @Override
             public void handleHttpResponse (Net.HttpResponse httpResponse) {
-                result = httpResponse.getResultAsString();
+                String result = httpResponse.getResultAsString();
                 Json json = new Json();
-                highScores = json.fromJson(ArrayList.class, HighScoreEntry.class, result);
+                highScores = json.fromJson(ArrayList.class, HighscoreEntry.class, result);
+                source.receiveHighscore(highScores);
             }
 
 
@@ -41,7 +41,7 @@ public class MyHighScoreManager {
         });
     }
 
-    public void sendNewHighScore(HighScoreEntry highscore) {
+    public void sendNewHighScore(HighscoreEntry highscore) {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
 
@@ -71,7 +71,7 @@ public class MyHighScoreManager {
         });
     }
 
-    public ArrayList<HighScoreEntry> getHighScores() {
+    public ArrayList<HighscoreEntry> getHighScores() {
         return highScores;
     }
 }

@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
-public class MainClass extends ApplicationAdapter {
+public class MainClass extends ApplicationAdapter implements HighscoreListener {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
@@ -24,12 +24,12 @@ public class MainClass extends ApplicationAdapter {
 	@Override
 	public void create () {
 		myHighScoreManager = new MyHighScoreManager();
-		//highScore.sendNewHighScore(new HighScoreEntry("libgdx", 9999999));
-		myHighScoreManager.fetchHighScores();
+		//highScore.sendNewHighScore(new HighscoreEntry("libgdx", 9999999));
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, width, height);
 		createFont();
+		myHighScoreManager.fetchHighScores(this);
 	}
 
 	private void createFont() {
@@ -59,8 +59,6 @@ public class MainClass extends ApplicationAdapter {
 		font.draw(batch, textToDraw, 20, height-50);
 
 		batch.end();
-
-		textToDraw = highScores();
 	}
 
 	@Override
@@ -69,14 +67,17 @@ public class MainClass extends ApplicationAdapter {
 		font.dispose();
 	}
 
-	private String highScores() {
-		ArrayList<HighScoreEntry> highScores = myHighScoreManager.getHighScores();
+	@Override
+	public void receiveHighscore(List<HighscoreEntry> highscores) {
 		StringBuilder string = new StringBuilder();
 		string.append("Highscores:\n");
-		if (highScores == null) return string.toString();
-		for (HighScoreEntry e : highScores) {
-			string.append(e.getScore()).append("  ").append(e.getName()).append("\n");
+		if (highscores == null) {
+			textToDraw = string.toString();
+		} else {
+			for (HighscoreEntry e : highscores) {
+				string.append(e.getScore()).append("  ").append(e.getName()).append("\n");
+			}
+			textToDraw = string.toString();
 		}
-		return string.toString();
 	}
 }
