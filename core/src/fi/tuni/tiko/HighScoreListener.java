@@ -1,5 +1,7 @@
 package fi.tuni.tiko;
 
+import com.badlogic.gdx.Net;
+
 import java.util.List;
 
 /**
@@ -23,7 +25,7 @@ public interface HighScoreListener {
      * ReceiveConfirmationOnSend is called when sending high score entry is
      * successful.
      */
-    void receiveConfirmationOnSend();
+    void receiveSendReply(Net.HttpResponse httpResponse);
 
     /**
      * If sending high score entry fails this is called.

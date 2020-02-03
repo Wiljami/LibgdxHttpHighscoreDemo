@@ -97,7 +97,7 @@ public class HighScoreServer {
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 if (verbose)
                     Gdx.app.log("HighScoreServer", "Send: success");
-                source.receiveConfirmationOnSend();
+                source.receiveSendReply(httpResponse);
             }
 
             @Override

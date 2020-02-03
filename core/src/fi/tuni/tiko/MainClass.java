@@ -133,7 +133,7 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	}
 
 	@Override
-	public void receiveConfirmationOnSend() {
+	public void receiveSendReply() {
 		Gdx.app.log("MainClass", "Sent a new high entry successfully");
 		HighScoreServer.fetchHighScores(this);
 	}
