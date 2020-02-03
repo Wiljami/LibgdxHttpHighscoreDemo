@@ -5,13 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		skin = new Skin();
 		skin = new Skin (Gdx.files.internal("uiskin.json"));
 		HighScoreServer.setGetUrl("https://highscore-demo.herokuapp.com/get/");
-		HighScoreServer.setPostUrl("https://highscore-demo.herokuapp.com/add");
+		HighScoreServer.setPostUrl("https://highscore-demo.herokuapp.com/add/");
 		HighScoreServer.setVerbose(true);
 		HighScoreServer.fetchHighScores(this);
 		stage = new Stage();
@@ -51,6 +50,9 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 			i++;
 		}
 	}
+
+	private TextField nameField;
+	private TextField scoreField;
 
 	private void createTable() {
 		content.setFillParent(true);
@@ -74,19 +76,40 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 			}
 		});
 
-		TextButton newHighSCore = new TextButton("Add new highscore", skin);
+		TextButton newHighScore = new TextButton("Add new highscore", skin);
+		newHighScore.addListener(new ClickListener() {
+			 @Override
+			 public void clicked(InputEvent event, float x, float y) {
+				createNewScore();
+			 }
+		});
+
    		content.row();
-		content.add(fetch);
-		content.add(newHighSCore);
+		content.add(fetch).colspan(2);
+		content.row();
+		content.add(new Label("Name:", skin));
+		content.add(new Label("Score:", skin));
+		content.row();
+
+		nameField = new TextField("", skin);
+		scoreField = new TextField("", skin);
+
+		content.add(nameField);
+		content.add(scoreField);
+
+		content.row();
+		content.add(newHighScore).colspan(2);
 	}
 
 	private void fetchHighScores() {
 		HighScoreServer.fetchHighScores(this);
 	}
 
-	private void sendScore() {
-		HighScoreEntry score = new HighScoreEntry("Kalle", 10000);
-		HighScoreServer.sendNewHighScore(score, this);
+	private void createNewScore() {
+		String name = nameField.getText();
+		int score = Integer.parseInt(scoreField.getText());
+		HighScoreEntry scoreEntry = new HighScoreEntry(name, score);
+		HighScoreServer.sendNewHighScore(scoreEntry, this);
 	}
 
 	@Override
@@ -124,6 +147,6 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	@Override
 	public void failedToSendHighScore(Throwable t) {
 		Gdx.app.error("MainClass",
-				"Something went wrong while sending a high score entry", t);
+				"Something went wrong while sending a high scoreField entry", t);
 	}
 }
