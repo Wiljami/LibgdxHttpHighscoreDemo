@@ -32,7 +32,7 @@ public class HighScoreServer {
     /**
      * If verbose is true, this class will print out messages to the Gdx log.
      */
-    private static boolean verbose = true;
+    private static boolean verbose = false;
 
     /**
      * fetchHighScores gets high score entries from the server.
@@ -116,11 +116,27 @@ public class HighScoreServer {
         });
     }
 
+    public static String getGetUrl() {
+        return getUrl;
+    }
+
     public static void setGetUrl(String getUrl) {
         HighScoreServer.getUrl = getUrl;
     }
 
+    public static String getPostUrl() {
+        return postUrl;
+    }
+
     public static void setPostUrl(String postUrl) {
         HighScoreServer.postUrl = postUrl;
+    }
+
+    public static boolean isVerbose() {
+        return verbose;
+    }
+
+    public static void setVerbose(boolean verbose) {
+        HighScoreServer.verbose = verbose;
     }
 }

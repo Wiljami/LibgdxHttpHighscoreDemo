@@ -29,6 +29,7 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		createFont();
 		HighScoreServer.setGetUrl("https://highscore-demo.herokuapp.com/get/");
 		HighScoreServer.setPostUrl("https://highscore-demo.herokuapp.com/add");
+		HighScoreServer.setVerbose(true);
 		HighScoreServer.fetchHighScores(this);
 	}
 
