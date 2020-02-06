@@ -2,6 +2,7 @@ package fi.tuni.tiko;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,7 +36,6 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 		content = new Table();
-		content.setDebug(true);
 		createTable();
 		stage.addActor(content);
 	}
@@ -133,8 +133,9 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	}
 
 	@Override
-	public void receiveSendReply() {
-		Gdx.app.log("MainClass", "Sent a new high entry successfully");
+	public void receiveSendReply(Net.HttpResponse httpResponse) {
+		Gdx.app.log("MainClass", "Received response from server: "
+				+ httpResponse.getStatus().getStatusCode());
 		HighScoreServer.fetchHighScores(this);
 	}
 
