@@ -68,8 +68,8 @@ public class HighScoreServer {
                             jsonObject.get(i).get(1).asInt());
                     highScores.add(score);
                 }
-
-                Gdx.app.log("HighScoreServer", "Fetch: success");
+                if (verbose)
+                    Gdx.app.log("HighScoreServer", "Fetch: success");
                 source.receiveHighScore(highScores);
             }
 
@@ -112,10 +112,13 @@ public class HighScoreServer {
         request.setContent(content);
 
         if (user == null) {
-            Gdx.app.error("HighSCoreServer", "user not set");
+            if (verbose)
+                Gdx.app.error("HighSCoreServer", "user not set");
         } else if (password == null) {
+            if (verbose)
                 Gdx.app.error("HighSCoreServer", "password not set");
         } else if (url == null) {
+            if (verbose)
                 Gdx.app.error("HighSCoreServer", "url not set");
         } else {
             Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
