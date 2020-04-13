@@ -27,12 +27,16 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 
 	@Override
 	public void create () {
-		skin = new Skin();
-		skin = new Skin (Gdx.files.internal("uiskin.json"));
-		HighScoreServer.setGetUrl("https://highscore-demo.herokuapp.com/get/");
-		HighScoreServer.setPostUrl("https://highscore-demo.herokuapp.com/add/");
+		HighScoreServer.readConfig("highscore.config");
 		HighScoreServer.setVerbose(true);
 		HighScoreServer.fetchHighScores(this);
+
+		otherSetup();
+	}
+
+	private void otherSetup() {
+		skin = new Skin();
+		skin = new Skin (Gdx.files.internal("uiskin.json"));
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 		content = new Table();

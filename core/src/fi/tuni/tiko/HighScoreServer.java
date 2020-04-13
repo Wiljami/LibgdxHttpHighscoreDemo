@@ -3,10 +3,17 @@ package fi.tuni.tiko;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Net.HttpMethods;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * To get this work on an android device add following line to
@@ -16,23 +23,24 @@ import java.util.ArrayList;
  */
 public class HighScoreServer {
     /**
-     * url of where you get your high score data. What you get depends on the
-     * server. In this democase you will receive a json file that will contain
-     * up to 10 high score entries ordered by highest score first.
+     * url is the address of the highscore server.
      */
-    private static String getUrl;
-
-    /**
-     * url where you send your high score entries. The server will then handle
-     * the entry data. You should not have to worry whether the new high score
-     * gets to the top10 etc. Server takes care of that.
-     */
-    private static String postUrl;
+    private static String url;
 
     /**
      * If verbose is true, this class will print out messages to the Gdx log.
      */
     private static boolean verbose = false;
+
+    /**
+     * Password for the highscore host.
+     */
+    private static String password;
+
+    /**
+     * Username for the highscore host.
+     */
+    private static String user;
 
     /**
      * fetchHighScores gets high score entries from the server.
@@ -43,15 +51,24 @@ public class HighScoreServer {
      */
     public static void fetchHighScores(final HighScoreListener source) {
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.GET);
-        request.setUrl(getUrl);
+        request.setUrl(url);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @SuppressWarnings("unchecked")
             @Override
             public void handleHttpResponse (Net.HttpResponse httpResponse) {
                 String r = httpResponse.getResultAsString();
-                Json json = new Json();
-                ArrayList<HighScoreEntry> highScores =
-                        json.fromJson(ArrayList.class, HighScoreEntry.class, r);
+
+                JsonValue jsonObject = (new JsonReader().parse(r));
+
+                ArrayList<HighScoreEntry> highScores = new ArrayList<>();
+
+                for (int i = 1; i <= 10; i++) {
+                    HighScoreEntry score = new HighScoreEntry(
+                            jsonObject.get(i).get(0).asString(),
+                            jsonObject.get(i).get(1).asInt());
+                    highScores.add(score);
+                }
+
                 Gdx.app.log("HighScoreServer", "Fetch: success");
                 source.receiveHighScore(highScores);
             }
@@ -85,51 +102,74 @@ public class HighScoreServer {
         Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
 
-        String content = json.toJson(highScore);
+        String content = "name=" + highScore.getName() +
+                "&score=" + highScore.getScore() +
+                "&user=" + user +
+                "&password=" + password;
 
         Net.HttpRequest request = new Net.HttpRequest(HttpMethods.POST);
-        request.setUrl(postUrl);
-        request.setHeader("Content-type", "application/json");
+        request.setUrl(url);
         request.setContent(content);
 
-        Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                if (verbose)
-                    Gdx.app.log("HighScoreServer", "Send: success");
-                source.receiveSendReply(httpResponse);
-            }
+        if (user == null) {
+            Gdx.app.error("HighSCoreServer", "user not set");
+        } else if (password == null) {
+                Gdx.app.error("HighSCoreServer", "password not set");
+        } else if (url == null) {
+                Gdx.app.error("HighSCoreServer", "url not set");
+        } else {
+            Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+                @Override
+                public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                    if (verbose)
+                        Gdx.app.log("HighScoreServer", "Send: success");
+                    source.receiveSendReply(httpResponse);
+                }
 
-            @Override
-            public void failed(Throwable t) {
-                if (verbose)
-                    Gdx.app.error("HighScoreServer",
-                            "Send: failed", t);
-                source.failedToSendHighScore(t);
-            }
+                @Override
+                public void failed(Throwable t) {
+                    if (verbose)
+                        Gdx.app.error("HighScoreServer",
+                                "Send: failed", t);
+                    source.failedToSendHighScore(t);
+                }
 
-            @Override
-            public void cancelled() {
-                if (verbose)
-                    Gdx.app.log("HighScoreServer", "Send: cancelled");
+                @Override
+                public void cancelled() {
+                    if (verbose)
+                        Gdx.app.log("HighScoreServer", "Send: cancelled");
+                }
+
+            });
+        }
+    }
+
+    public static void readConfig(String propFileName) {
+        Properties prop = new Properties();
+        FileHandle file = Gdx.files.internal(propFileName);
+        InputStream inputStream = file.read();
+
+        try {
+            if (inputStream != null) {
+                prop.load(inputStream);
+            } else {
+                throw new FileNotFoundException("Config file '" + propFileName + "' not found.");
             }
-        });
+        } catch (IOException e) {
+            Gdx.app.log("HighScoreServer", e.getMessage());
+        }
+
+        user = prop.getProperty("user");
+        password = prop.getProperty("password");
+        url = prop.getProperty("url");
     }
 
     public static String getGetUrl() {
-        return getUrl;
+        return url;
     }
 
-    public static void setGetUrl(String getUrl) {
-        HighScoreServer.getUrl = getUrl;
-    }
-
-    public static String getPostUrl() {
-        return postUrl;
-    }
-
-    public static void setPostUrl(String postUrl) {
-        HighScoreServer.postUrl = postUrl;
+    public static void setUrl(String getUrl) {
+        HighScoreServer.url = getUrl;
     }
 
     public static boolean isVerbose() {
