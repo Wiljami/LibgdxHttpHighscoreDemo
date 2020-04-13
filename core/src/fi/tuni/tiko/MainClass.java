@@ -34,6 +34,31 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 		otherSetup();
 	}
 
+	@Override
+	public void receiveHighScore(List<HighScoreEntry> highScores) {
+		Gdx.app.log("MainClass", "Received new high scores successfully");
+		updateScores(highScores);
+	}
+
+	@Override
+	public void receiveSendReply(Net.HttpResponse httpResponse) {
+		Gdx.app.log("MainClass", "Received response from server: "
+				+ httpResponse.getStatus().getStatusCode());
+		HighScoreServer.fetchHighScores(this);
+	}
+
+	@Override
+	public void failedToRetrieveHighScores(Throwable t) {
+		Gdx.app.error("MainClass",
+				"Something went wrong while getting high scores", t);
+	}
+
+	@Override
+	public void failedToSendHighScore(Throwable t) {
+		Gdx.app.error("MainClass",
+				"Something went wrong while sending a high scoreField entry", t);
+	}
+
 	private void otherSetup() {
 		skin = new Skin();
 		skin = new Skin (Gdx.files.internal("uiskin.json"));
@@ -127,31 +152,5 @@ public class MainClass extends ApplicationAdapter implements HighScoreListener {
 	@Override
 	public void dispose () {
 		skin.dispose();
-	}
-
-
-	@Override
-	public void receiveHighScore(List<HighScoreEntry> highScores) {
-		Gdx.app.log("MainClass", "Received new high scores successfully");
-		updateScores(highScores);
-	}
-
-	@Override
-	public void receiveSendReply(Net.HttpResponse httpResponse) {
-		Gdx.app.log("MainClass", "Received response from server: "
-				+ httpResponse.getStatus().getStatusCode());
-		HighScoreServer.fetchHighScores(this);
-	}
-
-	@Override
-	public void failedToRetrieveHighScores(Throwable t) {
-		Gdx.app.error("MainClass",
-				"Something went wrong while getting high scores", t);
-	}
-
-	@Override
-	public void failedToSendHighScore(Throwable t) {
-		Gdx.app.error("MainClass",
-				"Something went wrong while sending a high scoreField entry", t);
 	}
 }
